@@ -9,18 +9,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="File Hub">
-  <link rel="apple-touch-icon" href="/icons/icon-512x512.png"> <!-- تأكد من وجود هذا الملف في مجلد /icons/ -->
-  
-  <!-- Developer Note:
-       IMPORTANT: For a fully functional PWA on GitHub Pages,
-       manifest.json and sw.js MUST be separate files in your root directory.
-       This embedded approach is for single-file testing but is NOT recommended for production PWA.
-       The manifest data is included via a meta tag here, which some browsers might not fully support for PWA.
-       The service worker registration below will point to a non-existent /sw.js if not created separately.
-  -->
-  <meta name="manifest_content" content='{"name":"File Hub","short_name":"File Hub","start_url":".","display":"standalone","background_color":"#071023","theme_color":"#06b6d4","icons":[{"src":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCc+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSdhJyB4MT0nMTInIHkxPScyJyB4Mj0nMTInIHkyPScyMicgZ3JhZGllbnRVbml0cz0ndXNlclNwYWNlT25Vc2UnPjxzdG9wIHN0b3AtY29sb3I9JyM3YzNhZWQnLz48c3RvcCBvZmZzZXQ9JzEnIHN0b3AtY29sb3I9JyMwNmI2ZDQnLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cGF0aCBkPSdNMTEgMmgyYy0xLjEgMC0yIC45LTIgMnYxNmMwIDEuMS45IDIgMiAyaDEwYzEuMSAwIDItLjkgMi0yVjhsLTYtNnpNMTUgMy41VjloNS41TDE1IDMuNXonIGZpbGw9J3VybCgjYSkvPjxwYXRoIGQ9J00xMi41IDEyaC0zdi0yaDNWN.VMMTggMTFsLTMuNSAyLjVWMjB6TTEzLjUgMTZoM3YyaC0zVjIwLjVMOCAxOGwzLjUtMi41VjE2eicgZmlsbD0nI2U2ZWVmOCcvPjwvc3ZnPg==","sizes":"512x512","type":"image/svg+xml"}]}'>
-  <!-- Developer Note: The manifest content is embedded here for a single-file solution.
-       For a robust PWA, create a separate 'manifest.json' file with the above content. -->
+  <link rel="apple-touch-icon" href="/icons/icon-512x512.png"> <!-- Path to your PWA icon on GitHub -->
+  <link rel="manifest" href="/manifest.json"> <!-- Path to your manifest.json on GitHub -->
+  <!-- Developer Note: For PWA, ensure manifest.json and sw.js are in the root directory.
+       Replace /icons/icon-512x512.png with the actual path to your highest-res PWA icon. -->
 
   <!-- Favicon for Files and Mechatronics -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='12' y1='2' x2='12' y2='22' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%237c3aed'/%3E%3Cstop offset='1' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z' fill='url(%23a)'/%3E%3Cpath d='M12.5 12h-3v-2h3V8.5L16 11l-3.5 2.5V12zM11.5 16h3v2h-3v2.5L8 18l3.5-2.5V16z' fill='%23e6eef8'/%3E%3C/svg%3E">
@@ -135,6 +127,57 @@
         height:18px;
         display:inline-block;
     }
+
+    /* PWA Install Button as an icon */
+    #install-app-icon-btn {
+        --size: 45px; /* Size of the circular button */
+        width: var(--size);
+        height: var(--size);
+        padding: 0; /* Remove padding for icon-only button */
+        border-radius: 50%; /* Make it round */
+        display: flex; /* Center the icon */
+        justify-content: center;
+        align-items: center;
+        background: var(--card); /* Match card background or a slightly different shade */
+        color: var(--accent1); /* Icon color */
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        border: 1px solid rgba(255,255,255,0.08); /* Subtle border */
+        position: relative; /* For the tooltip */
+    }
+    #install-app-icon-btn svg {
+        width: 24px; /* Icon size inside the button */
+        height: 24px;
+        stroke: currentColor; /* Use button's color for the icon stroke */
+        stroke-width: 1.8;
+    }
+    #install-app-icon-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(124,58,237,0.25);
+        color: var(--accent2); /* Change icon color on hover */
+    }
+     #install-app-icon-btn::before {
+        content: "Install App";
+        position: absolute;
+        bottom: -35px; /* Position below the button */
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(0,0,0,0.8);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+        pointer-events: none; /* Allows clicks to pass through to the button */
+    }
+
+    #install-app-icon-btn:hover::before {
+        opacity: 1;
+        visibility: visible;
+    }
+
 
     /* Modal Styles (for Upload Form only now) */
     .modal-overlay {
@@ -347,10 +390,89 @@
             width: 35px;
             height: 35px;
         }
+        #install-app-icon-btn {
+            --size: 40px; /* Smaller button on small screens */
+        }
     }
   </style>
 </head>
 <body>
+  <!-- Developer Note:
+       To make this a fully functional PWA for desktop installation:
+       1. Create a file named 'manifest.json' in your GitHub project's root directory.
+          Paste the following content into it:
+          ```json
+          {
+            "name": "File Hub",
+            "short_name": "File Hub",
+            "start_url": ".",
+            "display": "standalone",
+            "background_color": "#071023",
+            "theme_color": "#06b6d4",
+            "icons": [
+              {
+                "src": "/icons/icon-512x512.png",
+                "sizes": "512x512",
+                "type": "image/png"
+              },
+              {
+                "src": "/icons/icon-192x192.png",
+                "sizes": "192x192",
+                "type": "image/png"
+              },
+              {
+                "src": "/icons/icon-144x144.png",
+                "sizes": "144x144",
+                "type": "image/png"
+              },
+              {
+                "src": "/icons/icon-96x96.png",
+                "sizes": "96x96",
+                "type": "image/png"
+              },
+              {
+                "src": "/icons/icon-72x72.png",
+                "sizes": "72x72",
+                "type": "image/png"
+              },
+              {
+                "src": "/icons/icon-48x48.png",
+                "sizes": "48x48",
+                "type": "image/png"
+              }
+            ]
+          }
+          ```
+       2. Create a folder named 'icons' in your GitHub project's root directory.
+       3. Place your application icon (e.g., a 512x512 PNG) inside the 'icons' folder and name it 'icon-512x512.png'.
+          (Optionally, add other sizes as specified in the manifest for better display across devices).
+       4. Create a file named 'sw.js' in your GitHub project's root directory.
+          Paste the following content into it:
+          ```javascript
+          // sw.js (Service Worker)
+          // A minimal service worker that enables PWA installation.
+          // For full offline capabilities, you'd add caching strategies here.
+
+          self.addEventListener('install', (event) => {
+            console.log('Service Worker: Installed');
+            self.skipWaiting(); // Forces the waiting service worker to become the active service worker
+          });
+
+          self.addEventListener('activate', (event) => {
+            console.log('Service Worker: Activated');
+            event.waitUntil(clients.claim()); // Take control of un-controlled clients immediately
+          });
+
+          self.addEventListener('fetch', (event) => {
+            // For now, we're just letting all network requests pass through.
+            // To add offline capabilities, you would implement caching strategies here.
+            // Example: event.respondWith(caches.match(event.request).then(response => response || fetch(event.request)));
+            event.respondWith(fetch(event.request));
+          });
+          ```
+       After these steps, when your site is live on GitHub Pages, browsers supporting PWA will show an install prompt.
+  -->
+
   <!-- Splash Screen -->
   <div id="splash-screen">
     <svg class="splash-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -387,15 +509,14 @@
         </svg>
         Upload Files
       </a>
-      <button id="install-app-btn" class="action-btn" style="display: none;" aria-label="Install File Hub App">
+      <button id="install-app-icon-btn" class="action-btn" aria-label="Install File Hub App">
         <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M12 8V16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M8 12H16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 8V16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 12H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        Install App
+        <!-- Developer Note: This button is always visible. Its click action triggers the PWA install prompt. -->
       </button>
-      <!-- Developer Note: The "Install App" button is hidden by default and shown by JavaScript if PWA installation is available. -->
     </div>
 
     <!-- Start of File Section -->
@@ -654,30 +775,37 @@
       }, 2000); // Display for 2 seconds
 
       // --- PWA Install Button Logic ---
-      const installAppBtn = document.getElementById('install-app-btn');
+      const installAppIconBtn = document.getElementById('install-app-icon-btn');
 
+      // This event tells us when the browser is ready to show the install prompt.
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault(); // Prevent the mini-infobar from appearing on mobile
         deferredPrompt = e; // Stash the event so it can be triggered later.
-        installAppBtn.style.display = 'flex'; // Show the install button
-        console.log('beforeinstallprompt fired, install button shown.');
+        // The button is already visible, so no need to change its display.
+        console.log('beforeinstallprompt fired, install available.');
       });
 
-      installAppBtn.addEventListener('click', async () => {
+      // Handle the click on our custom install button
+      installAppIconBtn.addEventListener('click', async () => {
         if (deferredPrompt) {
           deferredPrompt.prompt(); // Show the installation prompt
           const { outcome } = await deferredPrompt.userChoice; // Wait for the user to respond
           console.log(`User response to the install prompt: ${outcome}`);
           if (outcome === 'accepted') {
-            installAppBtn.style.display = 'none'; // Hide the button if user accepts
+            installAppIconBtn.style.display = 'none'; // Hide the button if user accepts
           }
           deferredPrompt = null; // Clear the deferred prompt
+        } else {
+            console.log('PWA installation prompt not available or already shown/dismissed.');
+            // Optionally, provide feedback to the user if the prompt can't be shown right now.
+            // alert('To install the app, use your browser\'s "Add to Home Screen" or "Install App" option from the menu.');
         }
       });
 
+      // This event fires if the app is already installed
       window.addEventListener('appinstalled', () => {
         console.log('PWA was installed!');
-        installAppBtn.style.display = 'none'; // Hide the button after successful installation
+        installAppIconBtn.style.display = 'none'; // Hide the button if already installed
       });
 
 
