@@ -109,7 +109,7 @@
         display:inline-block;
     }
 
-    /* Modal Styles (for both Upload and File View) */
+    /* Modal Styles (for Upload Form only now) */
     .modal-overlay {
         position: fixed;
         top: 0;
@@ -142,17 +142,10 @@
         flex-direction: column;
         border: 1px solid rgba(255,255,255,0.06); /* Subtle border */
     }
-    .modal-header { /* For file view modal actions */
-        display: flex;
-        justify-content: flex-end; /* Align buttons to the right */
-        gap: 10px; /* Space between buttons */
-        margin-bottom: 10px; /* Space below header */
-        position: absolute; /* Position relative to modal-content */
+    .modal-close-btn {
+        position: absolute;
         top: 15px;
         right: 15px;
-        z-index: 10; /* Ensure buttons are above iframe */
-    }
-    .modal-close-btn, .modal-action-btn {
         background: none;
         border: none;
         font-size: 2.5em; /* Large X */
@@ -168,20 +161,9 @@
         height: 40px;
         border-radius: 50%; /* Make them round */
     }
-    .modal-action-btn { /* Style specific to the "open in new window" button */
-        font-size: 1.5em; /* Smaller icon than close button */
-        color: var(--accent2);
-        background-color: rgba(6,182,212,0.1); /* Light background */
-        box-shadow: 0 2px 8px rgba(6,182,212,0.15);
-    }
     .modal-close-btn:hover {
         color: var(--accent1); /* Accent color on hover */
         transform: rotate(90deg);
-    }
-    .modal-action-btn:hover {
-        color: var(--text-color);
-        background-color: var(--accent2);
-        transform: translateY(-2px);
     }
     .modal-iframe {
         width: 100%;
@@ -190,12 +172,6 @@
         border-radius: 8px; /* Slightly rounded corners for the iframe */
         background-color: white; /* Forms generally have white backgrounds */
     }
-    /* Adjust iframe for file view to avoid overlapping header */
-    #file-viewer-iframe {
-        margin-top: 55px; /* Give space for the header buttons */
-        height: calc(100% - 55px); /* Adjust height accordingly */
-    }
-
 
     /* Styles for individual file sections */
     .file-section {
@@ -278,7 +254,7 @@
         font-size: 12px;
         opacity: 0.6;
         margin-top: 5px;
-        margin-bottom: 15px; /* Space before button */
+        margin-bottom: 8px; /* Space before button */
         color: var(--muted-text); /* Muted color */
     }
     .download-btn{--pad:14px 20px;display:inline-flex;align-items:center;gap:10px;background:linear-gradient(90deg,var(--accent1),var(--accent2));padding:var(--pad);border-radius:12px;color:white;font-weight:700;text-decoration:none;box-shadow:0 6px 18px rgba(124,58,237,0.18);transition:transform .15s ease,box-shadow .15s ease}
@@ -286,6 +262,14 @@
     .download-btn:active{transform:translateY(-1px)}
     .icon{width:18px;height:18px;display:inline-block}
     
+    .file-action-hint { /* New class for the hint text */
+        font-size: 13px; /* Slightly larger for readability */
+        opacity: .9; /* Make it a bit more prominent */
+        margin-top: 10px; /* Space from button */
+        color: var(--muted-text);
+        line-height: 1.4;
+    }
+
     /* Footer Styles */
     .page-footer {
         width: 100%;
@@ -328,19 +312,10 @@
             height: 90%;
             padding: 15px; /* Adjust padding for smaller screens */
         }
-        .modal-header {
-            top: 10px;
-            right: 10px;
-            gap: 5px;
-        }
-        .modal-close-btn, .modal-action-btn {
+        .modal-close-btn {
             font-size: 2em; /* Smaller close button on small screens */
             width: 35px;
             height: 35px;
-        }
-        #file-viewer-iframe {
-            margin-top: 50px;
-            height: calc(100% - 50px);
         }
     }
   </style>
@@ -370,24 +345,6 @@
     </div>
   </div>
   <!-- End Upload Form Modal -->
-
-  <!-- File Viewer Modal -->
-  <div id="file-view-modal-overlay" class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header">
-        <a id="open-in-new-window-btn" class="modal-action-btn" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open in new window">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 13V19C18 19.5523 17.5523 20 17 20H5C4.44772 20 4 19.5523 4 19V7C4 6.44772 4.44772 6 5 6H11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M15 4H20V9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M10 14L20 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-        <button class="modal-close-btn" id="file-view-modal-close-btn">&times;</button>
-      </div>
-      <iframe id="file-viewer-iframe" class="modal-iframe" src="" frameborder="0" allowfullscreen></iframe>
-    </div>
-  </div>
-  <!-- End File Viewer Modal -->
 
   <main>
     <!-- Upload Files Section -->
@@ -426,8 +383,7 @@
             <p class="desc">Click to view this file.</p>
             <p class="publisher">Published by: Dr. Mahmoud Hamed.</p>
             <div style="margin-top:12px">
-              <a class="download-btn" href="#" role="button"
-                 data-file-url="https://drive.google.com/file/d/1rLRCszhYdbH1xzMe_nOHAbzesxZN32Aa/view?usp=drive_link">
+              <a class="download-btn" href="https://drive.google.com/file/d/1rLRCszhYdbH1xzMe_nOHAbzesxZN32Aa/view?usp=drive_link" target="_blank" rel="noopener noreferrer" role="button">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <path d="M12 3v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -436,7 +392,8 @@
                 View File
               </a>
             </div>
-            <!-- Developer Note: This card opens the file in an in-page modal. -->
+            <div class="file-action-hint">Once opened in Google Drive, click the <span style="color:var(--accent2); font-weight:700;">download icon (↓)</span> in the top-right corner to save the file to your device.</div>
+            <!-- Developer Note: This card opens the file in a new tab. -->
           </div>
         </div>
         <!-- End of Download Card -->
@@ -454,8 +411,7 @@
             <p class="desc">Click to view this file.</p>
             <p class="publisher">Published by: Dr. Mahmoud Hamed.</p>
             <div style="margin-top:12px">
-              <a class="download-btn" href="#" role="button"
-                 data-file-url="https://drive.google.com/file/d/1QFP4odfAIu3-ukTrT6fys9Et8iOrzWIq/view?usp=drive_link">
+              <a class="download-btn" href="https://drive.google.com/file/d/1QFP4odfAIu3-ukTrT6fys9Et8iOrzWIq/view?usp=drive_link" target="_blank" rel="noopener noreferrer" role="button">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <path d="M12 3v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -464,7 +420,8 @@
                 View File
               </a>
             </div>
-            <!-- Developer Note: This card opens the file in an in-page modal. -->
+            <div class="file-action-hint">Once opened in Google Drive, click the <span style="color:var(--accent2); font-weight:700;">download icon (↓)</span> in the top-right corner to save the file to your device.</div>
+            <!-- Developer Note: This card opens the file in a new tab. -->
           </div>
         </div>
         <!-- End of Download Card -->
@@ -482,8 +439,7 @@
             <p class="desc">Click to view this file.</p>
             <p class="publisher">Published by: Dr. Mahmoud Hamed.</p>
             <div style="margin-top:12px">
-              <a class="download-btn" href="#" role="button"
-                 data-file-url="https://drive.google.com/file/d/1Ij56Ad3kgxddCuv0FKruCuSk6Y7LHcGp/view?usp=drive_link">
+              <a class="download-btn" href="https://drive.google.com/file/d/1Ij56Ad3kgxddCuv0FKruCuSk6Y7LHcGp/view?usp=drive_link" target="_blank" rel="noopener noreferrer" role="button">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <path d="M12 3v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -492,12 +448,13 @@
                 View File
               </a>
             </div>
-            <!-- Developer Note: This card opens the file in an in-page modal. -->
+            <div class="file-action-hint">Once opened in Google Drive, click the <span style="color:var(--accent2); font-weight:700;">download icon (↓)</span> in the top-right corner to save the file to your device.</div>
+            <!-- Developer Note: This card opens the file in a new tab. -->
           </div>
         </div>
         <!-- End of Download Card -->
- <!-- Start of Download Card - Duplicate this block for more files in this section -->
-        <div class="card" role="region" aria-label="download card for Lecture 3">
+        <!-- Start of Download Card - Duplicate this block for more files in this section -->
+        <div class="card" role="region" aria-label="download card for Lecture 4">
           <div class="info">
             <p class="title">
                 <svg class="file-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -509,8 +466,7 @@
             <p class="desc">Click to view this file.</p>
             <p class="publisher">Published by: Dr. Mahmoud Hamed.</p>
             <div style="margin-top:12px">
-              <a class="download-btn" href="#" role="button"
-                 data-file-url="https://drive.google.com/file/d/1iapOU-IZHW6MeAmtH6GSkQYj7hcXgO3F/view?usp=drive_link">
+              <a class="download-btn" href="https://drive.google.com/file/d/1iapOU-IZHW6MeAmtH6GSkQYj7hcXgO3F/view?usp=drive_link" target="_blank" rel="noopener noreferrer" role="button">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <path d="M12 3v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -519,12 +475,13 @@
                 View File
               </a>
             </div>
-            <!-- Developer Note: This card opens the file in an in-page modal. -->
+            <div class="file-action-hint">Once opened in Google Drive, click the <span style="color:var(--accent2); font-weight:700;">download icon (↓)</span> in the top-right corner to save the file to your device.</div>
+            <!-- Developer Note: This card opens the file in a new tab. -->
           </div>
         </div>
         <!-- End of Download Card -->
           <!-- Start of Download Card - Duplicate this block for more files in this section -->
-        <div class="card" role="region" aria-label="download card for Lecture 3">
+        <div class="card" role="region" aria-label="download card for Lecture 5">
           <div class="info">
             <p class="title">
                 <svg class="file-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -536,8 +493,7 @@
             <p class="desc">Click to view this file.</p>
             <p class="publisher">Published by: Dr. Mahmoud Hamed.</p>
             <div style="margin-top:12px">
-              <a class="download-btn" href="#" role="button"
-                 data-file-url="https://drive.google.com/file/d/1nZimO8IL_3MdwT0o1TQYxT0WstoFh3py/view?usp=drive_link">
+              <a class="download-btn" href="https://drive.google.com/file/d/1nZimO8IL_3MdwT0o1TQYxT0WstoFh3py/view?usp=drive_link" target="_blank" rel="noopener noreferrer" role="button">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <path d="M12 3v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -546,7 +502,8 @@
                 View File
               </a>
             </div>
-            <!-- Developer Note: This card opens the file in an in-page modal. -->
+            <div class="file-action-hint">Once opened in Google Drive, click the <span style="color:var(--accent2); font-weight:700;">download icon (↓)</span> in the top-right corner to save the file to your device.</div>
+            <!-- Developer Note: This card opens the file in a new tab. -->
           </div>
         </div>
         <!-- End of Download Card -->
@@ -577,8 +534,7 @@
             <p class="desc">Click to view this file.</p>
             <p class="publisher">Published by: R&D Department.</p>
             <div style="margin-top:12px">
-              <a class="download-btn" href="#" role="button"
-                 data-file-url="https://drive.google.com/file/d/YOUR_FILE_ID_FOR_ALPHA_REPORT/view?usp=drive_link">
+              <a class="download-btn" href="https://drive.google.com/file/d/YOUR_FILE_ID_FOR_ALPHA_REPORT/view?usp=drive_link" target="_blank" rel="noopener noreferrer" role="button">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <path d="M12 3v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -587,7 +543,8 @@
                 View File
               </a>
             </div>
-            <!-- Developer Note: This card opens the file in an in-page modal. -->
+            <div class="file-action-hint">Once opened in Google Drive, click the <span style="color:var(--accent2); font-weight:700;">download icon (↓)</span> in the top-right corner to save the file to your device.</div>
+            <!-- Developer Note: This card opens the file in a new tab. -->
           </div>
         </div>
         <!-- End of Download Card -->
@@ -605,8 +562,7 @@
             <p class="desc">Click to view this file.</p>
             <p class="publisher">Published by: Marketing Team.</p>
             <div style="margin-top:12px">
-              <a class="download-btn" href="#" role="button"
-                 data-file-url="https://example.com/documents/marketing-proposal-q4.docx">
+              <a class="download-btn" href="https://example.com/documents/marketing-proposal-q4.docx" target="_blank" rel="noopener noreferrer" role="button">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <path d="M12 3v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -615,7 +571,8 @@
                 View File
               </a>
             </div>
-            <!-- Developer Note: This card opens the file in an in-page modal. -->
+            <div class="file-action-hint">The file will open in a new tab. Look for download options within the new window to save it.</div>
+            <!-- Developer Note: This card opens the file in a new tab. -->
           </div>
         </div>
         <!-- End of Download Card -->
@@ -672,51 +629,6 @@
           document.body.style.overflow = '';
         }
       });
-
-      // --- File Viewer Modal Logic ---
-      const fileViewModalOverlay = document.getElementById('file-view-modal-overlay');
-      const fileViewModalCloseBtn = document.getElementById('file-view-modal-close-btn');
-      const fileViewerIframe = document.getElementById('file-viewer-iframe');
-      const openInNewWindowBtn = document.getElementById('open-in-new-window-btn');
-
-      const downloadButtons = document.querySelectorAll('.download-btn');
-
-      downloadButtons.forEach(anchor => {
-        const fileUrl = anchor.dataset.fileUrl;
-
-        // The href attribute of the button itself will now open the modal
-        anchor.href = '#'; // Prevent default navigation if JS is active
-
-        // Add click listener to open the file in the modal
-        anchor.addEventListener('click', (e) => {
-          e.preventDefault();
-          if (fileUrl) {
-            fileViewerIframe.src = fileUrl; // Set iframe source to the file URL
-            openInNewWindowBtn.href = fileUrl; // Set the href for the "Open in New Window" button
-            fileViewModalOverlay.classList.add('visible'); // Show file viewer modal
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
-          } else {
-            console.warn('View File button is missing data-file-url:', anchor);
-          }
-        });
-      });
-
-      fileViewModalCloseBtn.addEventListener('click', () => {
-        fileViewModalOverlay.classList.remove('visible'); // Hide file viewer modal
-        fileViewerIframe.src = ''; // Clear iframe source
-        document.body.style.overflow = ''; // Restore background scrolling
-      });
-
-      fileViewModalOverlay.addEventListener('click', (e) => {
-        if (e.target === fileViewModalOverlay) {
-          fileViewModalOverlay.classList.remove('visible');
-          fileViewerIframe.src = '';
-          document.body.style.overflow = '';
-        }
-      });
-
-      // The 'openInNewWindowBtn' already has target="_blank" and rel="noopener noreferrer" in HTML
-      // Its href is set dynamically when the file view modal opens. No extra JS click needed.
     });
   </script>
 </body>
