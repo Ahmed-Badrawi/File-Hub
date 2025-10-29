@@ -1,40 +1,137 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>فيديوهات الموقع</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background: #f9f9f9;
-      padding: 20px;
+<!-- videos.html content -->
+<style>
+    /* This style block should be inside your videos.html */
+    :root {
+        /* Inherit these from your main index.html or define here if videos.html is standalone */
+        --card: #0b1220;
+        --text-color: #e6eef8;
+        --accent1: #7c3aed;
+        --accent2: #06b6d4;
+        --border-radius-base: 12px;
+        --shadow-light: 0 4px 15px rgba(0,0,0,0.3);
     }
-    h1 {
-      text-align: center;
-      color: #333;
+    .videos-content-wrapper {
+        padding: 30px; /* Increased padding */
+        max-width: 900px;
+        margin: auto;
+        background: var(--card);
+        border-radius: var(--border-radius-base);
+        box-shadow: var(--shadow-light);
+        color: var(--text-color);
+        border: 1px solid rgba(255,255,255,0.04); /* Consistent border */
     }
-    .video-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
+    .videos-content-wrapper .section-title { /* Reusing main section title style */
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 25px;
+        color: var(--accent2);
+        text-align: left; /* Keep left alignment for sections */
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        border-bottom: 2px solid rgba(6, 182, 212, 0.3);
+        padding-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
     }
-    iframe {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      border-radius: 10px;
-      border: none;
+    .videos-content-wrapper .section-title svg { /* Icon in videos.html title */
+        width: 32px;
+        height: 32px;
+        color: var(--accent1);
     }
-  </style>
-</head>
-<body>
-  <h1>📺 أحدث الفيديوهات</h1>
-
-  <div class="video-grid">
-    <!-- هنا بتحط روابط الفيديوهات -->
-    <iframe src="https://youtu.be/er-AHm9KJVM?si=vJeN4GyRgv1u21hu" allowfullscreen></iframe>
-    <iframe src="https://youtu.be/4gZ8iSWuzmE?si=nfrPyFYbZ4BNEb0J" allowfullscreen></iframe>
-    <iframe src="https://youtu.be/fPtZv3JfWPw?si=DE3ma9Wxf56KQLXS" allowfullscreen></iframe>
-  </div>
-</body>
-</html>
+    .video-item {
+        margin-bottom: 40px; /* More space between videos */
+        background-color: rgba(255,255,255,0.02); /* Subtle background for each video */
+        padding: 20px;
+        border-radius: var(--border-radius-base);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .video-item h3 {
+        color: var(--accent1);
+        margin-bottom: 10px;
+        font-size: 1.5em;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .video-item h3 svg { /* Icon for video title */
+        width: 24px;
+        height: 24px;
+        color: var(--accent2);
+    }
+    .video-item p {
+        font-size: 1.1em;
+        opacity: 0.9;
+        margin-bottom: 20px;
+    }
+    .video-responsive {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        height: 0;
+        overflow: hidden;
+        max-width: 100%;
+        background: black;
+        border-radius: 8px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    }
+    .video-responsive iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+    /* Responsive adjustments for videos.html */
+    @media (max-width: 600px) {
+        .videos-content-wrapper {
+            padding: 15px;
+        }
+        .videos-content-wrapper .section-title {
+            font-size: 24px;
+            text-align: center;
+            justify-content: center;
+        }
+        .video-item h3 {
+            font-size: 1.3em;
+            text-align: center;
+            justify-content: center;
+        }
+    }
+</style>
+<div class="videos-content-wrapper">
+    <h2 class="section-title">
+        <svg class="section-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 10V14C18 14.5304 17.7893 15.0391 17.4142 15.4142C17.0391 15.7893 16.5304 16 16 16H4C3.44772 16 3 15.5523 3 15V9C3 8.44772 3.44772 8 4 8H8L10 4H14L16 8H18Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Our Video Lectures
+    </h2>
+    <div class="video-item">
+        <h3>
+            <svg style="width: 24px; height: 24px; color: var(--accent2);" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14 2V8H20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Introduction to Mechatronics
+        </h3>
+        <p>An overview of the mechatronics field and its applications.</p>
+        <div class="video-responsive">
+            <iframe src="https://www.youtube.com/embed/YOUR_YOUTUBE_VIDEO_ID_1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div class="video-item">
+        <h3>
+            <svg style="width: 24px; height: 24px; color: var(--accent2);" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14 2V8H20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Robotics Fundamentals
+        </h3>
+        <p>Learn the basics of robotics, from kinematics to control systems.</p>
+        <div class="video-responsive">
+            <iframe src="https://www.youtube.com/watch?v=er-AHm9KJVM&t=148s" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+    <!-- Add more videos as needed -->
+</div>
