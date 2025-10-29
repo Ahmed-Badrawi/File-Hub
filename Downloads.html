@@ -109,7 +109,7 @@
         display:inline-block;
     }
 
-    /* Modal Styles */
+    /* Modal Styles (for both Upload and File View) */
     .modal-overlay {
         position: fixed;
         top: 0;
@@ -142,21 +142,46 @@
         flex-direction: column;
         border: 1px solid rgba(255,255,255,0.06); /* Subtle border */
     }
-    .modal-close-btn {
-        position: absolute;
+    .modal-header { /* For file view modal actions */
+        display: flex;
+        justify-content: flex-end; /* Align buttons to the right */
+        gap: 10px; /* Space between buttons */
+        margin-bottom: 10px; /* Space below header */
+        position: absolute; /* Position relative to modal-content */
         top: 15px;
         right: 15px;
+        z-index: 10; /* Ensure buttons are above iframe */
+    }
+    .modal-close-btn, .modal-action-btn {
         background: none;
         border: none;
         font-size: 2.5em; /* Large X */
         color: var(--muted-text);
         cursor: pointer;
         line-height: 1;
-        padding: 0;
-        transition: color 0.2s ease;
+        padding: 0 5px; /* Added horizontal padding */
+        transition: color 0.2s ease, transform 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px; /* Make button area clickable */
+        height: 40px;
+        border-radius: 50%; /* Make them round */
+    }
+    .modal-action-btn { /* Style specific to the "open in new window" button */
+        font-size: 1.5em; /* Smaller icon than close button */
+        color: var(--accent2);
+        background-color: rgba(6,182,212,0.1); /* Light background */
+        box-shadow: 0 2px 8px rgba(6,182,212,0.15);
     }
     .modal-close-btn:hover {
-        color: var(--accent2); /* Accent color on hover */
+        color: var(--accent1); /* Accent color on hover */
+        transform: rotate(90deg);
+    }
+    .modal-action-btn:hover {
+        color: var(--text-color);
+        background-color: var(--accent2);
+        transform: translateY(-2px);
     }
     .modal-iframe {
         width: 100%;
@@ -164,6 +189,11 @@
         border: none;
         border-radius: 8px; /* Slightly rounded corners for the iframe */
         background-color: white; /* Forms generally have white backgrounds */
+    }
+    /* Adjust iframe for file view to avoid overlapping header */
+    #file-viewer-iframe {
+        margin-top: 55px; /* Give space for the header buttons */
+        height: calc(100% - 55px); /* Adjust height accordingly */
     }
 
 
@@ -216,7 +246,7 @@
         text-align: left; /* Align text within card to the left */
         max-width: 380px; /* Limit card width for better layout with multiple cards */
         width: 100%; /* Ensure card takes full width of its container if needed */
-        min-height: 200px; /* Ensure cards have a consistent minimum height */
+        min-height: 180px; /* Adjusted min height */
         justify-content: space-between; /* Space out content vertically */
     }
     .info{
@@ -255,7 +285,7 @@
     .download-btn:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(6,182,212,0.12)}
     .download-btn:active{transform:translateY(-1px)}
     .icon{width:18px;height:18px;display:inline-block}
-
+    
     /* Footer Styles */
     .page-footer {
         width: 100%;
@@ -296,11 +326,21 @@
         .modal-content {
             width: 95%; /* Make modal slightly wider on small screens */
             height: 90%;
+            padding: 15px; /* Adjust padding for smaller screens */
         }
-        .modal-close-btn {
-            font-size: 2em; /* Smaller close button on small screens */
+        .modal-header {
             top: 10px;
             right: 10px;
+            gap: 5px;
+        }
+        .modal-close-btn, .modal-action-btn {
+            font-size: 2em; /* Smaller close button on small screens */
+            width: 35px;
+            height: 35px;
+        }
+        #file-viewer-iframe {
+            margin-top: 50px;
+            height: calc(100% - 50px);
         }
     }
   </style>
@@ -325,11 +365,29 @@
   <!-- Upload Form Modal -->
   <div id="upload-modal-overlay" class="modal-overlay">
     <div class="modal-content">
-      <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+      <button class="modal-close-btn" id="upload-modal-close-btn">&times;</button>
       <iframe id="office-form-iframe" class="modal-iframe" src="" frameborder="0" allowfullscreen></iframe>
     </div>
   </div>
   <!-- End Upload Form Modal -->
+
+  <!-- File Viewer Modal -->
+  <div id="file-view-modal-overlay" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <a id="open-in-new-window-btn" class="modal-action-btn" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open in new window">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 13V19C18 19.5523 17.5523 20 17 20H5C4.44772 20 4 19.5523 4 19V7C4 6.44772 4.44772 6 5 6H11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 4H20V9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10 14L20 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <button class="modal-close-btn" id="file-view-modal-close-btn">&times;</button>
+      </div>
+      <iframe id="file-viewer-iframe" class="modal-iframe" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+  <!-- End File Viewer Modal -->
 
   <main>
     <!-- Upload Files Section -->
@@ -356,7 +414,7 @@
       <div class="section-cards-wrapper">
 
         <!-- Start of Download Card -->
-        <div class="card" role="region" aria-label="download card for Utility Program">
+        <div class="card" role="region" aria-label="download card for Lecture 1">
           <div class="info">
             <p class="title">
                 <svg class="file-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -365,27 +423,26 @@
                 </svg>
                 Lecture 1
             </p>
-            <p class="desc">Download the Lecture 1 of Pneumatics and Hydraulics.</p>
+            <p class="desc">Click to view this file.</p>
             <p class="publisher">Published by: Dr. Mahmoud Hamed.</p>
             <div style="margin-top:12px">
               <a class="download-btn" href="#" role="button"
-                 data-file-url="https://drive.google.com/file/d/1rLRCszhYdbH1xzMe_nOHAbzesxZN32Aa/view?usp=drive_link"
-                 data-file-name="Pneumatics_and_Hydraulics_Lecture_1_DTU.pdf">
+                 data-file-url="https://drive.google.com/file/d/1rLRCszhYdbH1xzMe_nOHAbzesxZN32Aa/view?usp=drive_link">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <path d="M12 3v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M21 21H3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                Download Now
+                View File
               </a>
             </div>
-            <!-- Developer Note: If the file opens in the browser, right-click the preview and choose "Save as..." or use the button again. -->
+            <!-- Developer Note: This card opens the file in an in-page modal. -->
           </div>
         </div>
         <!-- End of Download Card -->
 
         <!-- Start of Download Card - Duplicate this block for more files in this section -->
-        <div class="card" role="region" aria-label="download card for Driver Pack">
+        <div class="card" role="region" aria-label="download card for Lecture 2">
           <div class="info">
             <p class="title">
                 <svg class="file-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -394,26 +451,26 @@
                 </svg>
                 Lecture 2
             </p>
-            <p class="desc">Download the Lecture 2 of Pneumatics and Hydraulics.</p>
+            <p class="desc">Click to view this file.</p>
             <p class="publisher">Published by: Dr. Mahmoud Hamed.</p>
             <div style="margin-top:12px">
               <a class="download-btn" href="#" role="button"
-                 data-file-url="https://drive.google.com/file/d/1QFP4odfAIu3-ukTrT6fys9Et8iOrzWIq/view?usp=drive_link"
-                 data-file-name="Pneumatics_and_Hydraulics_Lecture_2_DTU.pdf">
+                 data-file-url="https://drive.google.com/file/d/1QFP4odfAIu3-ukTrT6fys9Et8iOrzWIq/view?usp=drive_link">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <path d="M12 3v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M21 21H3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                Download Now
+                View File
               </a>
             </div>
-            <!-- Developer Note: If the file opens in the browser, right-click the preview and choose "Save as..." or use the button again. -->
+            <!-- Developer Note: This card opens the file in an in-page modal. -->
           </div>
         </div>
         <!-- End of Download Card -->
-   <!-- Start of Download Card - Duplicate this block for more files in this section -->
-        <div class="card" role="region" aria-label="download card for Driver Pack">
+
+        <!-- Start of Download Card - Duplicate this block for more files in this section -->
+        <div class="card" role="region" aria-label="download card for Lecture 3">
           <div class="info">
             <p class="title">
                 <svg class="file-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -422,21 +479,20 @@
                 </svg>
                 Lecture 3
             </p>
-            <p class="desc">Download the Lecture 3 of Pneumatics and Hydraulics.</p>
+            <p class="desc">Click to view this file.</p>
             <p class="publisher">Published by: Dr. Mahmoud Hamed.</p>
             <div style="margin-top:12px">
               <a class="download-btn" href="#" role="button"
-                 data-file-url="https://drive.google.com/file/d/1Ij56Ad3kgxddCuv0FKruCuSk6Y7LHcGp/view?usp=drive_link"
-                 data-file-name="Pneumatics_and_Hydraulics_Lecture_3_DTU.pdf">
+                 data-file-url="https://drive.google.com/file/d/1Ij56Ad3kgxddCuv0FKruCuSk6Y7LHcGp/view?usp=drive_link">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <path d="M12 3v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M21 21H3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                Download Now
+                View File
               </a>
             </div>
-            <!-- Developer Note: If the file opens in the browser, right-click the preview and choose "Save as..." or use the button again. -->
+            <!-- Developer Note: This card opens the file in an in-page modal. -->
           </div>
         </div>
         <!-- End of Download Card -->
@@ -465,21 +521,20 @@
                 </svg>
                 Project Alpha Report
             </p>
-            <p class="desc">Detailed report on Project Alpha's progress and findings. (PDF format)</p>
-            <p class="publisher">Published by: R&D Department</p>
+            <p class="desc">Click to view this file.</p>
+            <p class="publisher">Published by: R&D Department.</p>
             <div style="margin-top:12px">
               <a class="download-btn" href="#" role="button"
-                 data-file-url="https://drive.google.com/uc?export=download&id=YOUR_FILE_ID_FOR_ALPHA_REPORT"
-                 data-file-name="Project_Alpha_Report.pdf">
+                 data-file-url="https://drive.google.com/file/d/YOUR_FILE_ID_FOR_ALPHA_REPORT/view?usp=drive_link">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <path d="M12 3v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M21 21H3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                Download Report
+                View File
               </a>
             </div>
-            <!-- Developer Note: If the file opens in the browser, right-click the preview and choose "Save as..." or use the button again. -->
+            <!-- Developer Note: This card opens the file in an in-page modal. -->
           </div>
         </div>
         <!-- End of Download Card -->
@@ -494,21 +549,20 @@
                 </svg>
                 Marketing Proposal Q4
             </p>
-            <p class="desc">Our comprehensive marketing strategy for the upcoming quarter. (DOCX format)</p>
-            <p class="publisher">Published by: Marketing Team</p>
+            <p class="desc">Click to view this file.</p>
+            <p class="publisher">Published by: Marketing Team.</p>
             <div style="margin-top:12px">
               <a class="download-btn" href="#" role="button"
-                 data-file-url="https://example.com/documents/marketing-proposal-q4.docx"
-                 data-file-name="Marketing_Proposal_Q4.docx">
+                 data-file-url="https://example.com/documents/marketing-proposal-q4.docx">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <path d="M12 3v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M21 21H3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                Get Document
+                View File
               </a>
             </div>
-            <!-- Developer Note: If the file opens in the browser, right-click the preview and choose "Save as..." or use the button again. -->
+            <!-- Developer Note: This card opens the file in an in-page modal. -->
           </div>
         </div>
         <!-- End of Download Card -->
@@ -529,7 +583,6 @@
       const splashScreen = document.getElementById('splash-screen');
       setTimeout(() => {
         splashScreen.classList.add('hidden');
-        // Optional: Remove splash screen from DOM after transition to free up resources
         splashScreen.addEventListener('transitionend', () => {
           splashScreen.remove();
         }, { once: true });
@@ -537,92 +590,80 @@
 
       // --- Upload Modal Logic ---
       const uploadButton = document.getElementById('upload-btn');
-      const modalOverlay = document.getElementById('upload-modal-overlay');
-      const modalCloseBtn = document.getElementById('modal-close-btn');
+      const uploadModalOverlay = document.getElementById('upload-modal-overlay');
+      const uploadModalCloseBtn = document.getElementById('upload-modal-close-btn');
       const officeFormIframe = document.getElementById('office-form-iframe');
 
       uploadButton.addEventListener('click', (e) => {
         e.preventDefault();
         const formUrl = uploadButton.dataset.formUrl;
         if (formUrl) {
-          officeFormIframe.src = formUrl; // Set iframe source
-          modalOverlay.classList.add('visible'); // Show modal
-          document.body.style.overflow = 'hidden'; // Prevent scrolling background
+          officeFormIframe.src = formUrl;
+          uploadModalOverlay.classList.add('visible');
+          document.body.style.overflow = 'hidden';
         } else {
           console.error('Upload button is missing data-form-url attribute.');
         }
       });
 
-      modalCloseBtn.addEventListener('click', () => {
-        modalOverlay.classList.remove('visible'); // Hide modal
-        officeFormIframe.src = ''; // Clear iframe source to stop any form processes
-        document.body.style.overflow = ''; // Restore scrolling
+      uploadModalCloseBtn.addEventListener('click', () => {
+        uploadModalOverlay.classList.remove('visible');
+        officeFormIframe.src = '';
+        document.body.style.overflow = '';
       });
 
-      // Close modal if clicking outside the content (on the overlay)
-      modalOverlay.addEventListener('click', (e) => {
-        if (e.target === modalOverlay) {
-          modalOverlay.classList.remove('visible');
+      uploadModalOverlay.addEventListener('click', (e) => {
+        if (e.target === uploadModalOverlay) {
+          uploadModalOverlay.classList.remove('visible');
           officeFormIframe.src = '';
           document.body.style.overflow = '';
         }
       });
 
+      // --- File Viewer Modal Logic ---
+      const fileViewModalOverlay = document.getElementById('file-view-modal-overlay');
+      const fileViewModalCloseBtn = document.getElementById('file-view-modal-close-btn');
+      const fileViewerIframe = document.getElementById('file-viewer-iframe');
+      const openInNewWindowBtn = document.getElementById('open-in-new-window-btn');
 
-      // --- Download button logic ---
       const downloadButtons = document.querySelectorAll('.download-btn');
 
       downloadButtons.forEach(anchor => {
-        const directUrl = anchor.dataset.fileUrl; // Get URL from data-file-url attribute
-        const fileName = anchor.dataset.fileName; // Get optional filename from data-file-name
+        const fileUrl = anchor.dataset.fileUrl;
 
-        // Set href for normal behavior (fallback)
-        if (directUrl) {
-          anchor.href = directUrl;
-          anchor.target = '_blank';
-          anchor.rel = 'noopener noreferrer';
-        } else {
-          console.warn('Download button is missing data-file-url:', anchor);
-          anchor.href = '#'; // Prevent navigation if no URL
-        }
+        // The href attribute of the button itself will now open the modal
+        anchor.href = '#'; // Prevent default navigation if JS is active
 
-        // Try to fetch the file and force-download (better UX in many browsers).
-        // If CORS prevents it, fall back to opening the direct link.
-        anchor.addEventListener('click', async function(e){
-          if (!directUrl || directUrl === '#') {
-            e.preventDefault(); // Prevent default if no valid URL
-            return;
-          }
-
-          e.preventDefault(); // Always prevent default here, as we'll handle opening/downloading
-          try{
-            const resp = await fetch(directUrl, {mode:'cors'});
-            if(!resp.ok) throw new Error('Network response was not ok');
-            const blob = await resp.blob();
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-
-            // Determine filename: Use data-file-name if provided, else from response headers, else default.
-            if (fileName) {
-                a.download = fileName;
-            } else {
-                const disp = resp.headers.get('Content-Disposition') || '';
-                const match = disp.match(/filename\*=UTF-8''([^;\n\r]+)/i) || disp.match(/filename="?([^";]+)"?/i);
-                a.download = match ? decodeURIComponent(match[1]) : 'downloaded-file';
-            }
-
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            URL.revokeObjectURL(url);
-          }catch(err){
-            // fallback: open the direct download link (Drive will usually prompt or show preview)
-            console.error("Fetch download failed, opening direct link:", err);
-            window.open(directUrl, '_blank', 'noopener');
+        // Add click listener to open the file in the modal
+        anchor.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (fileUrl) {
+            fileViewerIframe.src = fileUrl; // Set iframe source to the file URL
+            openInNewWindowBtn.href = fileUrl; // Set the href for the "Open in New Window" button
+            fileViewModalOverlay.classList.add('visible'); // Show file viewer modal
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+          } else {
+            console.warn('View File button is missing data-file-url:', anchor);
           }
         });
       });
+
+      fileViewModalCloseBtn.addEventListener('click', () => {
+        fileViewModalOverlay.classList.remove('visible'); // Hide file viewer modal
+        fileViewerIframe.src = ''; // Clear iframe source
+        document.body.style.overflow = ''; // Restore background scrolling
+      });
+
+      fileViewModalOverlay.addEventListener('click', (e) => {
+        if (e.target === fileViewModalOverlay) {
+          fileViewModalOverlay.classList.remove('visible');
+          fileViewerIframe.src = '';
+          document.body.style.overflow = '';
+        }
+      });
+
+      // The 'openInNewWindowBtn' already has target="_blank" and rel="noopener noreferrer" in HTML
+      // Its href is set dynamically when the file view modal opens. No extra JS click needed.
     });
   </script>
 </body>
