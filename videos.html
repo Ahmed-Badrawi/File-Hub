@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فيديوهات الموقع</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    iframe {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 10px;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>📺 أحدث الفيديوهات</h1>
+
+  <div class="video-grid">
+    <!-- هنا بتحط روابط الفيديوهات -->
+    <iframe src="https://youtu.be/er-AHm9KJVM?si=vJeN4GyRgv1u21hu" allowfullscreen></iframe>
+    <iframe src="https://youtu.be/4gZ8iSWuzmE?si=nfrPyFYbZ4BNEb0J" allowfullscreen></iframe>
+    <iframe src="https://youtu.be/fPtZv3JfWPw?si=DE3ma9Wxf56KQLXS" allowfullscreen></iframe>
+  </div>
+</body>
+</html>
