@@ -18,4 +18,19 @@
 <h2>Mechatronics <button><a href="Mechatronics.html"> <h3>Go</h3> </a></button></h2>
 <hr>
     <h2>C++ Tutorial <button><a href="*"> <h3>Go</h3></a></button></h2>
+    <p><a href="index.html">File Hub </a> | <select id="main-menu" onchange="navigateToPage(this.value)">
+  <option value="" disabled selected>Subjects</option>
+  
+  <option value="Mechatronics.html">Mechatronics</option>
+  <option value="Cpp-Tutorial.html">C++ Tutorial</option>
+</select></p>
+    <script>
+function navigateToPage(url) {
+  // التحقق للتأكد من أن القيمة المختارة ليست فارغة (ليست خيار "Subjects" الافتراضي)
+  if (url) {
+    // توجيه المتصفح إلى الرابط الذي تم اختياره
+    window.location.href = url;
+  }
+}
+</script>
 </body>
