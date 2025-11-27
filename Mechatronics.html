@@ -12,14 +12,15 @@
             font-weight: 700;
     </style>
 </head>
+<body>
 <p><a href="index.html">File Hub</a> | <a href="Mechatronics.html">Mechatronics</a> | 
-<select id="main-menu" name="navigation-menu">
-  <option value="" disabled selected>Subjects</option> 
+<select id="main-menu" onchange="navigateToPage(this.value)">
+  <option value="" disabled selected>Subjects</option>
   
-  <option><a href="PLC.html">PLC</a></option>
-  <option><a href="Pneumatics-&-Hydraulics.html">Pneumatics & Hydraulics</a></option>
-  <option><a href="Material-Selection.html">Material Selection</a></option>
-  <option><a href="Programming-for-Mechatronics-Application.html">Programming for Mechatronics Application</a></option>
+  <option value="PLC.html">PLC</option>
+  <option value="Pneumatics-&-Hydraulics.html">Pneumatics & Hydraulics</option>
+  <option value="Material-Selection.html">Material Selection</option>
+  <option value="Programming-for-Mechatronics-Application.html">Programming for Mechatronics Application</option>
 </select></p>
 <hr>
 <h2>Materials</h2>
@@ -47,3 +48,13 @@
 <p>Pneumatics and Hydraulics | Sheet | 1 <button><a href="https://drive.google.com/file/d/1D-KNoRVQDSb2SIuoLGePjdO9dfPOaTQ-/view?usp=drive_link"> Go </a></button></p>
 <p>Pneumatics and Hydraulics | Sheet | 2 <button><a href="https://drive.google.com/file/d/1Lueev4qKvcFmmBfFN9SBdXpUgzaik8tQ/view?usp=drive_link"> Go </a></button></p>
 <p>Pneumatics and Hydraulics | Sheet | 3 <button><a href="https://drive.google.com/file/d/1BB6b8WjvoQXEJ6dhld85j896CcEYKOyL/view?usp=drive_link"> Go </a></button></p>
+    <script>
+function navigateToPage(url) {
+  // التحقق للتأكد من أن القيمة المختارة ليست فارغة (ليست خيار "Subjects" الافتراضي)
+  if (url) {
+    // توجيه المتصفح إلى الرابط الذي تم اختياره
+    window.location.href = url;
+  }
+}
+</script>
+</body>
