@@ -38,6 +38,7 @@
     </style>
 </head>
 <body>
+    <div class="responsive-frame">
 <p><a href="index.html">File Hub</a> | <a href="Mechatronics.html">Mechatronics</a> | 
 <select id="main-menu" onchange="navigateToPage(this.value)">
   <option value="" disabled selected>Subjects</option>
@@ -157,6 +158,7 @@
     <hr>
     <hr>
 <p><a href="index.html">File Hub</a> | <a href="Mechatronics.html">Mechatronics</a></p>
+    </div>
     <script>
 function navigateToPage(url) {
   // التحقق للتأكد من أن القيمة المختارة ليست فارغة (ليست خيار "Subjects" الافتراضي)
@@ -165,5 +167,6 @@ function navigateToPage(url) {
     window.location.href = url;
   }
 }
+    
 </script>
 </body>
