@@ -11,6 +11,21 @@
             background-color: black; 
             color: white;     
         }
+    .responsive-frame {
+            /* تصميم الإطار البصري */
+            background-color: #ffffff;
+            border: 8px solid #a8dadc; /* إطار بلون هادئ */
+            border-radius: 20px; /* حواف مستديرة وجميلة */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* ظل عميق وناعم */
+            
+            /* خصائص التجاوب والتوسيط */
+            max-width: 1000px; /* أقصى عرض للإطار على الشاشات الكبيرة */
+            width: 90%; /* سيشغل 90% من عرض الشاشة مهما كان حجمها */
+            min-height: 85vh; /* ارتفاع لا يقل عن 85% من الشاشة */
+            margin: 0 auto; /* توسيط الإطار أفقياً */
+            padding: 30px; 
+            box-sizing: border-box; /* للتأكد من أن الـ padding لا يزيد من عرض الإطار */
+        }
         h1, h2, h3, h4, p {
             font-family: 'Montserrat', sans-serif; 
             font-weight: 700;
