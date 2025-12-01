@@ -54,5 +54,22 @@ function navigateToPage(url) {
     window.location.href = url;
   }
 }
+        // هذا الكود يوضع داخل وسم <script> في صفحة HTML
+let startTime;
+
+// يتم تشغيله عند تحميل الصفحة
+window.onload = function() {
+    startTime = new Date().getTime(); // تسجيل وقت البدء بالمللي ثانية
+};
+
+// يتم تشغيله عند مغادرة الصفحة أو إغلاقها
+window.onunload = function() {
+    let endTime = new Date().getTime(); // تسجيل وقت الانتهاء
+    let timeSpent = (endTime - startTime) / 1000; // حساب الفرق وتحويله لثواني
+
+    // في هذه النقطة، يجب إرسال المتغير "timeSpent" إلى خادمك أو أداة التحليل
+    console.log("المدة التي قضاها المستخدم في الصفحة: " + timeSpent + " ثانية.");
+    // لإرسال البيانات للخادم، تحتاج لاستخدام AJAX
+};
 </script>
 </body>
