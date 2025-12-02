@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحة الإشعارات المتكاملة</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            padding: 20px;
+            direction: rtl; 
+            text-align: right;
+            margin: 0;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 15px;
+        }
+
+        /* حاوية الإشعارات */
+        .notifications-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        /* تصميم الإشعار الواحد */
+        .notification-box {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            display: flex; 
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* تصنيف الإشعارات */
+        .notification-box.important {
+            border-right: 5px solid #d9534f; /* خط أحمر على اليمين */
+            background-color: #fef5f5;
+        }
+
+        .notification-box.info {
+            border-right: 5px solid #5bc0de; /* خط أزرق على اليمين */
+            background-color: #f5faff;
+        }
+
+        /* زر إغلاق الإشعار */
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            font-weight: 300;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.2s;
+            line-height: 1; /* ضبط محاذاة X */
+            padding: 0 5px;
+        }
+
+        .close-btn:hover {
+            color: #d9534f;
+        }
+
+        /* تصميم الزر التجريبي */
+        .add-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        .add-btn:hover {
+            background-color: #4cae4c;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>📢 لوحة الإشعارات الإدارية</h1>
+        <p>هذه الإشعارات تظهر حسب التحديثات التي تم إضافتها يدوياً.</p>
+    </header>
+
+    <main class="notifications-container">
+        </main>
+
+    <button class="add-btn" onclick="addNotification('تم إضافة ميزة جديدة للموقع بنجاح.', 'info')">أضف إشعار (تجريبي)</button>
+    <button class="add-btn" style="background-color: #d9534f;" onclick="addNotification('صيانة هامة يوم الخميس القادم، يرجى المتابعة.', 'important')">أضف إشعار هام (تجريبي)</button>
+    
+    <script>
+        // 1. مصفوفة لتخزين الإشعارات
+        let notifications = [];
+
+        // 2. تحميل الإشعارات من الذاكرة المحلية (Local Storage)
+        function loadNotifications() {
+            const storedNotifications = localStorage.getItem('notifications');
+            if (storedNotifications) {
+                // Parse the string back into a JavaScript array
+                notifications = JSON.parse(storedNotifications);
+            }
+            renderNotifications(); 
+        }
+
+        // 3. حفظ الإشعارات في الذاكرة المحلية
+        function saveNotifications() {
+            // Stringify the array before saving it
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+        }
+
+        // 4. دالة إضافة إشعار جديد (الدالة التي ستستخدمها لإضافة إشعاراتك)
+        function addNotification(message, type = 'info') {
+            const newNotification = {
+                id: Date.now(), 
+                message: message,
+                type: type,
+                // Get current date in Arabic format
+                date: new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }) 
+            };
+
+            notifications.unshift(newNotification); // Add to the beginning
+            saveNotifications(); 
+            renderNotifications(); 
+        }
+
+        // 5. دالة إنشاء عنصر HTML للإشعار
+        function createNotificationElement(notification) {
+            const container = document.createElement('div');
+            container.className = `notification-box ${notification.type}`;
+            container.dataset.id = notification.id;
+
+            // محتوى الإشعار (التاريخ + الرسالة)
+            const content = document.createElement('span');
+            content.innerHTML = `<strong>[${notification.date}]</strong>: ${notification.message}`;
+
+            // زر الإغلاق
+            const closeButton = document.createElement('button');
+            closeButton.className = 'close-btn';
+            closeButton.innerHTML = '&times;'; // HTML entity for 'X'
+            closeButton.title = 'إغلاق الإشعار';
+
+            // ربط زر الإغلاق بدالة الإزالة
+            closeButton.onclick = () => removeNotification(notification.id);
+
+            container.appendChild(content);
+            container.appendChild(closeButton);
+
+            return container;
+        }
+
+        // 6. دالة عرض جميع الإشعارات في الصفحة
+        function renderNotifications() {
+            const container = document.querySelector('.notifications-container');
+            container.innerHTML = ''; // Clear existing content
+            
+            if (notifications.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #777; padding: 20px;">🎉 لا توجد إشعارات حاليًا.</p>';
+                return;
+            }
+
+            notifications.forEach(notification => {
+                const element = createNotificationElement(notification);
+                container.appendChild(element);
+            });
+        }
+
+        // 7. دالة إزالة إشعار بناءً على المعرف (يتم استدعاؤها بالنقر على X)
+        function removeNotification(id) {
+            // Remove the notification from the array
+            notifications = notifications.filter(notification => notification.id != id);
+            saveNotifications(); 
+            renderNotifications(); 
+        }
+
+        // 8. تحميل وتشغيل الإشعارات عند تحميل الصفحة
+        loadNotifications(); 
+        
+        // *******************************************************************
+        // 🛑 لإضافة إشعاراتك الخاصة، قم بوضع استدعاءات الدالة addNotification هنا:
+        // *******************************************************************
+        
+        // مثال 1: إشعار معلوماتي (info)
+        // addNotification('مرحباً بالجميع! تم تحديث شروط الاستخدام الجديدة.', 'info');
+        
+        // مثال 2: إشعار مهم (important)
+        // addNotification('تنبيه أمني: يرجى تغيير كلمة المرور فوراً لتعزيز الأمان.', 'important');
+
+        // *******************************************************************
+    </script>
+</body>
+</html>
