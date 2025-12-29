@@ -34,6 +34,7 @@
 <h2>Mechatronics </h2>
     <button><a href="Mechatronics.html"> View Files </a></button>
 <hr style="width: 50%; height: 5px; background-color: #e74c3c; border: none; margin: 20px auto;">
+    <iframe src="https://1drv.ms/b/c/B385DF1620C33A54/IQSlVU_5Y6NPTKhPo3NbS19kAeXicQOMVRmb05CdgWSHVF8" width="98" height="120" frameborder="0" scrolling="no"></iframe>
 <hr>
     <h2>C++ Tutorial </h2>
     <button><a href="*"> View Files </a></button>
@@ -55,64 +56,3 @@ function navigateToPage(url) {
   }
 
 </script>
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>User Tracking Page</title>
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
-    <script>
-        // Replace 'GA_TRACKING_ID' with your actual Tracking ID
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        // This line initializes page tracking
-        gtag('config', 'GA_TRACKING_ID');
-        
-        // Google Analytics automatically records:
-        // 1. Page views count.
-        // 2. User duration (from page load to exit).
-    </script>
-    
-    <script>
-        let startTime;
-
-        // Record the start time when the page finishes loading
-        window.onload = function() {
-            startTime = new Date().getTime(); 
-            console.log("Start time recorded.");
-        };
-
-        // Calculate and log the time spent when the user closes or leaves the page
-        window.onbeforeunload = function() {
-            let endTime = new Date().getTime(); 
-            let timeSpentSeconds = (endTime - startTime) / 1000; // Calculate difference in seconds
-
-            // The 'timeSpentSeconds' variable can be sent to your own server 
-            // here if you are not using Google Analytics.
-            console.log("Time spent on this page: " + timeSpentSeconds.toFixed(2) + " seconds.");
-        };
-    </script>
-
-    <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            text-align: center; 
-            margin-top: 50px; 
-        }
-    </style>
-</head>
-<body>
-
-    <h1>Welcome to the Tracking Page</h1>
-    <p>This page is now configured to record visits and duration using analytics tools.</p>
-    
-    <hr style="width: 50%; height: 3px; background-color: #2980b9; border: none; margin: 20px auto;">
-
-    <p>To view statistics, check your **Google Analytics** dashboard.</p>
-
-</body>
-</html>
-</body>
