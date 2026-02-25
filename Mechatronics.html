@@ -1,175 +1,222 @@
+<!DOCTYPE html>
+<html lang="ar">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Hub | Mechatronics_Database</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <title>File Hub | Mechatronics</title>
-<style>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --terminal-green: #00ff41;
+            --dim-green: #003b00;
+            --warning-orange: #ff6600;
+            --text-white: #f0f0f0;
+        }
+
         body {
-            background-color: black; 
-            color: white;     
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            font-family: 'Fira Code', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
         }
-    .responsive-frame {
-            /* تصميم الإطار البصري */
-            background-color: #000000;
-            border: 8px solid #3A007A; /* إطار بلون هادئ */
-            border-radius: 20px; /* حواف مستديرة وجميلة */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* ظل عميق وناعم */
-            
-            /* خصائص التجاوب والتوسيط */
-            max-width: 1000px; /* أقصى عرض للإطار على الشاشات الكبيرة */
-            width: 90%; /* سيشغل 90% من عرض الشاشة مهما كان حجمها */
-            min-height: 85vh; /* ارتفاع لا يقل عن 85% من الشاشة */
-            margin: 0 auto; /* توسيط الإطار أفقياً */
-            padding: 30px; 
-            box-sizing: border-box; /* للتأكد من أن الـ padding لا يزيد من عرض الإطار */
+
+        .responsive-frame {
+            background-color: rgba(10, 10, 10, 0.95);
+            border: 2px solid var(--dim-green);
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+            max-width: 900px;
+            width: 100%;
+            padding: 25px;
+            box-sizing: border-box;
+            position: relative;
         }
-    .hover-underline:hover {
-            /* إضافة الخط عند مرور الماوس (Hover) */
-            text-decoration: underline; 
-            /* يمكنك إضافة تأثيرات أخرى هنا مثل تغيير اللون */
-            color: #ff6600; 
+
+        /* تأثير سطر الأوامر العلوي */
+        .frame-header {
+            border-bottom: 1px solid var(--dim-green);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            font-size: 0.9rem;
+            color: var(--terminal-green);
         }
-    .no-underline {
+
+        h2, h3 {
+            color: var(--terminal-green);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-left: 3px solid var(--terminal-green);
+            padding-left: 15px;
+            margin-top: 40px;
+        }
+
+        h3 { border-left-color: var(--warning-orange); font-size: 1.2rem; }
+
+        .file-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 10px;
+            border-bottom: 1px solid #1a1a1a;
+            transition: background 0.3s;
+        }
+
+        .file-row:hover {
+            background: rgba(0, 255, 65, 0.05);
+        }
+
+        .file-info {
+            font-size: 0.95rem;
+        }
+
+        .file-info::before {
+            content: "> ";
+            color: var(--terminal-green);
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 6px 12px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s;
+            font-size: 0.8rem;
+        }
+
+        button:hover {
+            background: var(--terminal-green);
+            color: black;
+            box-shadow: 0 0 10px var(--terminal-green);
+        }
+
+        a {
+            color: inherit;
             text-decoration: none;
         }
-        h1, h2, h3, h4, p {
-            font-family: 'Montserrat', sans-serif; 
-            font-weight: 700;
+
+        select {
+            background: #111;
+            color: var(--terminal-green);
+            border: 1px solid var(--dim-green);
+            padding: 5px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .breadcrumb a {
+            color: var(--terminal-green);
+            font-weight: bold;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--warning-orange);
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px dashed var(--dim-green);
+            margin: 10px 0;
+        }
+
+        /* Blinking Cursor Effect */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background: var(--terminal-green);
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        @media (max-width: 600px) {
+            .file-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
     </style>
 </head>
 <body>
-    <div class="responsive-frame">
-<p><a href="index.html">File Hub</a> | <a href="Mechatronics.html">Mechatronics</a> | 
-<select id="main-menu" onchange="navigateToPage(this.value)">
-  <option value="" disabled selected>Subjects</option>
-  
-  <option value="PLC.html">1. PLC</option>
-  <option value="Pneumatics-and-Hydraulics.html">2. Pneumatics & Hydraulics</option>
-  <option value="Material-Selection.html">3. Material Selection</option>
-  <option value="Programming-for-Mechatronics-Application.html">4. Programming for Mechatronics Application</option>
-  <option value="PC-Based-Control.html">5. PC Based Control</option>
-</select></p>
-<hr>
-<hr>
-<h2>Mechatronics Subjects</h2>
-<hr>
-<hr>
-<h3>Lectures</h3>
-<p>PLC | Lecture | 1 </p>
-    <button><a href="https://drive.google.com/file/d/1hy9YO4f0rQQ0gLtZqGl9MnpFBDH7iUsJ/view?usp=drive_link" class="hover-underline" class="no-underline"> View File ↗ </a></button>
-    <hr>
-<p>PLC | Lecture | 2 & 3 </p>
-    <button><a href="https://drive.google.com/file/d/1NseaMI7SKpCFuNjc6xEZwXpoWh6iGoKi/view?usp=drive_link" class="hover-underline" class="no-underline"> View File ↗ </a></button>
-    <hr>
-<p>PLC | Lecture | 4 </p>
-    <button><a href="https://drive.google.com/file/d/1nwkTRrhRE2yTMaUkZYkzWMVpmddj9cgA/view?usp=drive_link" class="hover-underline" class="no-underline"> View File ↗ </a></button>
-    <hr>
-<p>PLC | Lecture | 5 </p>
-    <button><a href="https://drive.google.com/file/d/1Ssg3KT0sRNB3eSaTG_g-_mNkZA7AYbfF/view?usp=drive_link" class="hover-underline" class="no-underline"> View File ↗ </a></button>
-    <hr>
-<p>PLC | Lecture | 6 </p>
-    <button><a href="https://drive.google.com/file/d/1l9VLnbFi21Zm2bmI1SmCyL7xsdaIIXPJ/view?usp=drive_link" class="hover-underline" class="no-underline"> View File ↗ </a></button>
-    <hr>
-<p>PLC | Lecture | from 7 to 12 </p>
-    <button><a href="https://drive.google.com/file/d/1PI0aeygkdI3ZqEYPRpqT_DoiWHoAErSW/view?usp=drive_link" class="hover-underline" class="no-underline"> View File ↗ </a></button>
-    <hr>
-<p>Pneumatics and Hydraulics | Lecture | 1 </p>
-    <button><a href="https://drive.google.com/file/d/1rLRCszhYdbH1xzMe_nOHAbzesxZN32Aa/view?usp=drive_link"><h4>View File ↗ </h4></a></button>
-    <hr>
-<p>Pneumatics and Hydraulics | Lecture | 2 </p>
-    <button><a href="https://drive.google.com/file/d/1QFP4odfAIu3-ukTrT6fys9Et8iOrzWIq/view?usp=drive_link"><h4>View File ↗ </h4></a></button>
-    <hr>
-<p>Pneumatics and Hydraulics | Lecture | 3 </p>
-    <button><a href="https://drive.google.com/file/d/1Ij56Ad3kgxddCuv0FKruCuSk6Y7LHcGp/view?usp=drive_link"><h4>View File ↗ </h4></a></button>
-    <hr>
-<p>Pneumatics and Hydraulics | Lecture | 4 </p>
-    <button><a href="https://drive.google.com/file/d/1iapOU-IZHW6MeAmtH6GSkQYj7hcXgO3F/view?usp=drive_link"> View File ↗ </a></button>
-    <hr>
-<p>Pneumatics and Hydraulics | Lecture | 5 </p>
-    <button><a href="https://drive.google.com/file/d/1nZimO8IL_3MdwT0o1TQYxT0WstoFh3py/view?usp=drive_link"> View File ↗ </a></button>
-    <hr>
-<p>Pneumatics and Hydraulics | Lecture | 6 </p>
-    <button><a href="https://drive.google.com/file/d/1MKXp-c8Rl3kzH3PkNTqy3zKm_wuO9WEW/view?usp=drive_link"> View File ↗ </a></button>
-    <hr>
-<p>Pneumatics and Hydraulics | Lecture | 7 </p>
-    <button><a href="https://drive.google.com/file/d/1hKte7lJDUQ7Dl3ijj9Ex6Fr9xCF7xbNI/view?usp=drive_link"> View File ↗ </a></button>
-    <hr>
-<p>Materials Selection | Lecture | 1 </p>
-    <button><a href="https://drive.google.com/file/d/1FXk0dBfUg-ueb8F7HQzJfjWYMy6x3yCw/view?usp=drive_link"> View File ↗ </a></button>
-    <hr>
-<p>Materials Selection | Lecture | 2 </p>
-    <button><a href="https://drive.google.com/file/d/1qvbPAJDarco3Zb9A4_n7eBu355RNvz7L/view?usp=drive_link"> View File ↗ </a></button>
-    <hr>
-<p>Materials Selection | Lecture | 3 </p>
-    <button><a href="https://drive.google.com/file/d/1Jqlv9hDQgEUURfgDX3OH-hEo_j0Q98K4/view?usp=drive_link"> View File ↗ </a></button>
-    <hr>
-<p>Materials Selection | Lecture | 4 </p>
-    <button><a href="https://drive.google.com/file/d/1UAp93OMtj76oYl7IygTQnB6ewwFGKMwn/view?usp=drive_link"> View File ↗ </a></button>
-    <hr>
-<p>Materials Selection | Lecture | 5 </p>
-    <button><a href="https://drive.google.com/file/d/1ELIQY85_iuvVSYnMoguJMEyeNTjeavfR/view?usp=drive_link"> View File ↗ </a></button>
-    <hr>
-<p>PC Based Control | Lecture | 1 </p>
-    <button><a href="https://drive.google.com/file/d/1Q91V8VYbpOBdftCGWvbnxHxAGRXYyefj/view?usp=drive_link"><h4>View File ↗ </h4></a></button>
-    <hr>
-<p>PC Based Control | Lecture | 2 </p>
-    <button><a href="https://drive.google.com/file/d/1TBRFDahvIozF8V3MteFESrjhUEM488ng/view?usp=drive_link"><h4>View File ↗ </h4></a></button>
-    <hr>
-<p>PC Based Control | Lecture | 3 </p>
-    <button><a href="https://drive.google.com/file/d/1FhkWqJWNVutHi5y1MZa_7LOSc6wyZzxa/view?usp=drive_link"><h4>View File ↗ </h4></a></button>
-    <hr>
-<p>PC Based Control | Lecture | 4 </p>
-    <button><a href="https://drive.google.com/file/d/1B1IiMsvR26XsPQUz1Ujz1v3iVrUFmM3B/view?usp=drive_link"><h4>View File ↗ </h4></a></button>
-    <hr>
-<p>PC Based Control | Lecture | 5 </p>
-    <button><a href="https://drive.google.com/file/d/18iLPx2Yf6pjr9vPYzt9q6w5UzDZHtJUq/view?usp=drive_link"><h4>View File ↗ </h4></a></button>
-    <hr>
-<p>PC Based Control | Lecture | 6 </p>
-    <button><a href="https://drive.google.com/file/d/1YeS1tQhIO2CyEotjfKf93JHMI69R5nhB/view?usp=drive_link"><h4>View File ↗ </h4></a></button>
-    <hr>
-<p>PC Based Control | Lecture | 7 </p>
-    <button><a href="https://drive.google.com/file/d/1gBuTn_j9xbAi5892PZtJ5YcQgDYLOcXR/view?usp=drive_link"><h4>View File ↗ </h4></a></button>
-    <hr>
-<p>PC Based Control | Lecture | 8 </p>
-    <button><a href="https://drive.google.com/file/d/1-oWIAO9TToTaPQXT_o6rHNPT5dgnedlY/view?usp=drive_link"><h4>View File ↗ </h4></a></button>
-<hr>
-<hr>
-<h3>Sheets</h3>
-<p>PLC | Sheet | 1 </p>
-    <button><a href="https://drive.google.com/file/d/1XGQaWrwKCkV-KcNSS_mOuZnXyz6pl6kh/view?usp=drive_link"> View File ↗ </a></button>
-    <hr>
-<p>PLC | Sheet | 2 </p>
-    <button><a href="https://drive.google.com/file/d/1yA4LOo81Uf_vNkLHAFt4AaZi8e2Q_xay/view?usp=drive_link"> View File ↗ </a></button>
-    <hr>
-<p>PLC | Sheet | 3 </p>
-    <button><a href="https://drive.google.com/file/d/1eih1mvuenRraEYiXF8siymOJbN5jFnZ1/view?usp=drive_link"> View File ↗ </a></button>
-    <hr>
-<p>PLC | Sheet | 4 </p>
-    <button><a href="https://drive.google.com/file/d/14WF7bIxM2u2ABnPhl19Px1B0CzZBDfAB/view?usp=drive_link"> View File ↗ </a></button>
-    <hr>
-<p>Pneumatics and Hydraulics | Sheet | 1 </p>
-    <button><a href="https://drive.google.com/file/d/1D-KNoRVQDSb2SIuoLGePjdO9dfPOaTQ-/view?usp=drive_link"> View File ↗ </a></button>
-    <hr>
-<p>Pneumatics and Hydraulics | Sheet | 2 </p>
-    <button><a href="https://drive.google.com/file/d/1Lueev4qKvcFmmBfFN9SBdXpUgzaik8tQ/view?usp=drive_link"> View File ↗ </a></button>
-    <hr>
-<p>Pneumatics and Hydraulics | Sheet | 3 </p>
-    <button><a href="https://drive.google.com/file/d/1BB6b8WjvoQXEJ6dhld85j896CcEYKOyL/view?usp=drive_link"> View File ↗ </a></button>
-    <hr>
-    <hr>
-<p><a href="index.html">File Hub</a> | <a href="Mechatronics.html">Mechatronics</a></p>
+
+<div class="responsive-frame">
+    <div class="frame-header">
+        SYSTEM@FILEHUB:~/MECHATRONICS$ <span class="cursor"></span>
     </div>
-    <script>
-function navigateToPage(url) {
-  // التحقق للتأكد من أن القيمة المختارة ليست فارغة (ليست خيار "Subjects" الافتراضي)
-  if (url) {
-    // توجيه المتصفح إلى الرابط الذي تم اختياره
-    window.location.href = url;
-  }
-}
+
+    <div class="breadcrumb">
+        <a href="index.html">root</a> / <a href="Mechatronics.html">mechatronics</a> / 
+        <select id="main-menu" onchange="navigateToPage(this.value)">
+            <option value="" disabled selected>SELECT_SUBJECT</option>
+            <option value="PLC.html">01_PLC</option>
+            <option value="Pneumatics-and-Hydraulics.html">02_Pneumatics_Hydraulics</option>
+            <option value="Material-Selection.html">03_Material_Selection</option>
+            <option value="Programming-for-Mechatronics-Application.html">04_Programming</option>
+            <option value="PC-Based-Control.html">05_PC_Control</option>
+        </select>
+    </div>
+
+    <h2>[ Mechatronics_Subjects ]</h2>
+
+    <h3>// LECTURES</h3>
     
+    <div class="file-row">
+        <span class="file-info">PLC | Lecture | 1</span>
+        <button onclick="window.location.href='https://drive.google.com/file/d/1hy9YO4f0rQQ0gLtZqGl9MnpFBDH7iUsJ/view?usp=drive_link'">FETCH_FILE ↗</button>
+    </div>
+
+    <div class="file-row">
+        <span class="file-info">PLC | Lecture | 2 & 3</span>
+        <button onclick="window.location.href='https://drive.google.com/file/d/1NseaMI7SKpCFuNjc6xEZwXpoWh6iGoKi/view?usp=drive_link'">FETCH_FILE ↗</button>
+    </div>
+
+    <div class="file-row">
+        <span class="file-info">Pneumatics & Hydraulics | Lec 1</span>
+        <button onclick="window.location.href='https://drive.google.com/file/d/1rLRCszhYdbH1xzMe_nOHAbzesxZN32Aa/view?usp=drive_link'">FETCH_FILE ↗</button>
+    </div>
+
+    <div class="file-row">
+        <span class="file-info">Materials Selection | Lec 1</span>
+        <button onclick="window.location.href='https://drive.google.com/file/d/1FXk0dBfUg-ueb8F7HQzJfjWYMy6x3yCw/view?usp=drive_link'">FETCH_FILE ↗</button>
+    </div>
+
+    <div class="file-row">
+        <span class="file-info">PC Based Control | Lec 1</span>
+        <button onclick="window.location.href='https://drive.google.com/file/d/1Q91V8VYbpOBdftCGWvbnxHxAGRXYyefj/view?usp=drive_link'">FETCH_FILE ↗</button>
+    </div>
+
+    <h3>// SHEETS_AND_LABS</h3>
+
+    <div class="file-row">
+        <span class="file-info">PLC | Sheet | 1</span>
+        <button onclick="window.location.href='https://drive.google.com/file/d/1XGQaWrwKCkV-KcNSS_mOuZnXyz6pl6kh/view?usp=drive_link'">ACCESS_DATA ↗</button>
+    </div>
+
+    <div class="file-row">
+        <span class="file-info">Pneumatics | Sheet | 1</span>
+        <button onclick="window.location.href='https://drive.google.com/file/d/1D-KNoRVQDSb2SIuoLGePjdO9dfPOaTQ-/view?usp=drive_link'">ACCESS_DATA ↗</button>
+    </div>
+
+    <div style="margin-top: 50px; text-align: center; font-size: 0.8rem; color: var(--dim-green);">
+        <hr>
+        END_OF_DIRECTORY
+    </div>
+</div>
+
+<script>
+function navigateToPage(url) {
+    if (url) window.location.href = url;
+}
 </script>
+
 </body>
+</html>
