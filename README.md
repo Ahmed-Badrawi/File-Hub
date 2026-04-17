@@ -22,4 +22,4 @@
 <p>C++ | 6.2 | Simple File Input</p>
 <p>C++ | 6.3 | Output Formatting</p>
 <p>C++ | 6.4 | Scope and Visibility</p>
-<h3>PLC</h3>
+
