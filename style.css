@@ -56,4 +56,9 @@ body { background: var(--black); color: #eee; font-family: 'Space Grotesk', sans
 
 .bottom-ticker { height: 30px; background: var(--red); color: #000; font-weight: bold; font-size: 0.7rem; display: flex; align-items: center; position: fixed; bottom: 0; width: 100%; }
 
+.nav-link {
+    text-decoration: none;
+    color: inherit; 
+    display: block; 
+}
 .hidden { display: none !important; }
