@@ -1,1 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILEHUB // VIDEO_STREAM</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
 
+    <div class="video-bg">
+        <video autoplay muted loop playsinline id="main-video">
+            <source src="red_video.mp4" type="video/mp4">
+        </video>
+        <div class="red-overlay"></div>
+        <div class="scanlines"></div>
+    </div>
+
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+
+    <audio id="ambient-sound" loop src="red_audio.mp3"></audio>
+    <audio id="ui-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+
+    <section id="intro">
+        <div class="intro-box">
+            <h1 class="glitch" data-text="FILEHUB">FILEHUB</h1>
+            <p class="sys-msg">MEDIA TERMINAL: RESTRICTED_ACCESS</p>
+            <button id="enter-btn">INITIALIZE FEED</button>
+        </div>
+    </section>
+
+    <main id="os-container" class="hidden">
+        <header class="top-bar">
+            <div class="sys-info">SYSTEM: <span class="red-txt">ACTIVE</span> // STREAM_NODE: <span id="user-ip">0.0.0.0</span></div>
+            <div class="clock" id="clock">00:00:00</div>
+        </header>
+
+        <div class="main-layout">
+            <aside class="sidebar">
+                <a href="index.html" class="nav-link">
+                    <div class="nav-item"><i class="fa-solid fa-folder-open"></i> ALL_FILES</div>
+                </a>
+                 <div class="nav-item active">
+                    <i class="fa-solid fa-code"></i> SECURE
+                </div>
+                <a href="scripts.html" class="nav-link">
+                    <div class="nav-item"><i class="fa-solid fa-shield-halved"></i> SCRIPTS</div>
+                </a>
+                
+               
+                
+                <div class="status-box">
+                    <p>DECRYPTION: ACTIVE</p>
+                    <div class="progress-bar"><div class="fill"></div></div>
+                </div>
+            </aside>
+
+            <section class="content-area">
+                <div class="area-header">/ROOT/DATABASE/VIDEO_CHANNELS</div>
+                
+                <div class="file-grid">
+                    
+                    <div class="file-card">
+                        <div class="file-icon"><i class="fa-solid fa-video"></i></div>
+                        <div class="file-details">
+                            <span class="name">Cyber_Security_Tutorial_Part_01_Basics.mp4</span>
+                            <span class="size">45.2 MB // DURATION: 12:40</span>
+                        </div>
+                        <a href="videos/tutorial01.mp4" class="dl-btn" target="_blank">WATCH / DL</a>
+                    </div>
+
+                    <div class="file-card">
+                        <div class="file-icon"><i class="fa-solid fa-video"></i></div>
+                        <div class="file-details">
+                            <span class="name">Automated_Script_Execution_Logs_Analysis.mp4</span>
+                            <span class="size">128.7 MB // DURATION: 34:15</span>
+                        </div>
+                        <a href="videos/tutorial02.mp4" class="dl-btn" target="_blank">WATCH / DL</a>
+                    </div>
+
+                    <div class="file-card">
+                        <div class="file-icon"><i class="fa-solid fa-video"></i></div>
+                        <div class="file-details">
+                            <span class="name">Mainframe_Bypass_Simulation_Data.mp4</span>
+                            <span class="size">18.4 MB // DURATION: 05:22</span>
+                        </div>
+                        <a href="videos/tutorial03.mp4" class="dl-btn" target="_blank">WATCH / DL</a>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+        
+        <footer class="bottom-ticker">
+            <marquee>BROADCAST SECURE // ENCRYPTED TUNNEL ACTIVE // DO NOT TERMINATE THE FEED // SYSTEM V.4.5.1</marquee>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
