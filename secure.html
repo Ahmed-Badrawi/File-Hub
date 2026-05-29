@@ -6,10 +6,37 @@
     <title>FILEHUB // VIDEO_STREAM</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .pass-input {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--red);
+            color: #fff;
+            padding: 12px;
+            width: 100%;
+            max-width: 250px;
+            text-align: center;
+            font-family: monospace;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+            outline: none;
+        }
+        .pass-input:focus {
+            box-shadow: 0 0 10px var(--red);
+        }
+        .error-msg {
+            color: var(--red);
+            font-family: monospace;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            letter-spacing: 2px;
+            display: none;
+            text-shadow: 0 0 5px var(--red);
+        }
+    </style>
 </head>
 <body>
 
-    <div class="video-bg">
+    <div class="video-bg" id="bg-container">
         <video autoplay muted loop playsinline id="main-video">
             <source src="red_1_video.mp4" type="video/mp4">
         </video>
@@ -26,8 +53,14 @@
     <section id="intro">
         <div class="intro-box">
             <h1 class="glitch" data-text="FILEHUB">FILEHUB</h1>
-            <p class="sys-msg">MEDIA TERMINAL: RESTRICTED_ACCESS</p>
+            <p class="sys-msg" id="gate-msg">MEDIA TERMINAL: RESTRICTED_ACCESS</p>
+            
+            <input type="password" id="sys-pass" class="pass-input" placeholder="PASSWORD" autocomplete="off">
+            <br>
+            
             <button id="enter-btn">INITIALIZE FEED</button>
+            
+            <div class="error-msg" id="error-txt">🚨 ACCESS DENIED // INVALID KEY 🚨</div>
         </div>
     </section>
 
@@ -48,8 +81,6 @@
                 <a href="scripts.html" class="nav-link">
                     <div class="nav-item"><i class="fa-solid fa-code"></i> SCRIPTS</div>
                 </a>
-                
-               
                 
                 <div class="status-box">
                     <p>DECRYPTION: ACTIVE</p>
