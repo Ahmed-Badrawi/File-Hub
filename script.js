@@ -6,15 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const osContainer = document.getElementById('os-container');
     const ambientSound = document.getElementById('ambient-sound');
     const uiClick = document.getElementById('ui-click');
-    
-    const sysPass = document.getElementById('sys-pass');
-    const bgContainer = document.getElementById('bg-container');
-    const mainVideo = document.getElementById('main-video');
-    const errorTxt = document.getElementById('error-txt');
-    const gateMsg = document.getElementById('gate-msg');
 
-    const correctPassword = "admin"; 
-    
     document.addEventListener('mousemove', (e) => {
         dot.style.left = e.clientX + 'px';
         dot.style.top = e.clientY + 'px';
@@ -38,54 +30,22 @@ document.addEventListener('DOMContentLoaded', () => {
             uiClick.currentTime = 0;
             uiClick.play().catch(err => console.log("Audio play blocked"));
         }
-
-        if (sysPass.value === correctPassword) {
-            if (errorTxt) errorTxt.style.display = "none";
+        
+        intro.style.transition = '1s';
+        intro.style.opacity = '0';
+        
+        setTimeout(() => {
+            intro.classList.add('hidden');
+            osContainer.classList.remove('hidden');
             
-            intro.style.transition = '1s';
-            intro.style.opacity = '0';
-            
-            setTimeout(() => {
-                intro.classList.add('hidden');
-                osContainer.classList.remove('hidden');
-                
-                if (bgContainer && mainVideo) {
-                    bgContainer.style.display = "block";
-                    mainVideo.muted = true;
-                    mainVideo.play().catch(e => console.log("Video playing"));
-                }
-
-                if(ambientSound && ambientSound.src !== "") {
-                    ambientSound.volume = 0.5;
-                    ambientSound.play().catch(e => console.log("Audio waiting for interaction"));
-                }
-                
-                startClock();
-                fetchIP();
-            }, 1000);
-
-        } else {
-            if (errorTxt) errorTxt.style.display = "block";
-            
-            if (gateMsg) gateMsg.style.color = "var(--red)";
-            sysPass.value = ""; 
-            
-            if (bgContainer && mainVideo) {
-                bgContainer.style.display = "block";
-                mainVideo.muted = false; 
-                mainVideo.play().catch(e => console.log("Video restriction handled"));
+            if(ambientSound.src !== "") {
+                ambientSound.volume = 0.5;
+                ambientSound.play().catch(e => console.log("Audio waiting for interaction"));
             }
-            if (ambientSound) {
-                ambientSound.volume = 0.8; 
-                ambientSound.play().catch(e => console.log("Audio restriction handled"));
-            }
-        }
-    });
-
-    sysPass.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            enterBtn.click();
-        }
+            
+            startClock();
+            fetchIP();
+        }, 1000);
     });
 
     function startClock() {
