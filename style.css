@@ -11,21 +11,18 @@
 
 body { background: var(--black); color: #eee; font-family: 'Space Grotesk', sans-serif; height: 100vh; overflow: hidden; }
 
-/* إعدادات الخلفية - تظليل خفيف ومتوازن */
 .video-bg { position: fixed; inset: 0; z-index: -2; overflow: hidden; }
 
 #main-video { 
     width: 100%; 
     height: 100%; 
     object-fit: cover; 
-    /* التعديل: سطوع متوسط (0.4) مع ألوان خفيفة غير فاقعة */
     filter: brightness(0.4) grayscale(0.3) contrast(1.1); 
 }
 
 .red-overlay { 
     position: absolute; 
     inset: 0; 
-    /* التعديل: تظليل خفيف جداً يغطي الفيديو بالكامل ليعطي عمق */
     background: radial-gradient(circle, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%); 
     z-index: -1; 
 }
@@ -37,7 +34,7 @@ body { background: var(--black); color: #eee; font-family: 'Space Grotesk', sans
     background-size: 100% 4px; 
     z-index: -1; 
     pointer-events: none; 
-    opacity: 0.15; /* خطوط خفيفة جداً تكاد لا تُرى */
+    opacity: 0.15;
 }
 
 #cursor-dot { width: 4px; height: 4px; background: #fff; position: fixed; z-index: 10000; pointer-events: none; border-radius: 50%; }
