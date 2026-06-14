@@ -1,48 +1,291 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Play</title>
+    <title>Logic Vortex</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #1a1a1a;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Space+Grotesk:wght=300;500;700&display=swap');
+
+        :root {
+            --red: #ff0000;
+            --red-glow: rgba(255, 0, 0, 0.6);
+            --black: #080808;
+            --glass: rgba(15, 0, 0, 0.85);
         }
-        .video-container {
-            width: 80%;
-            max-width: 800px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        video {
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+
+        body { background: var(--black); color: #eee; font-family: 'Space Grotesk', sans-serif; height: 100vh; overflow: hidden; }
+
+        .video-bg { position: fixed; inset: 0; z-index: -2; overflow: hidden; background: #000; }
+        
+        /* Fixed Video Wrapper for Responsive Embedding */
+        .video-wrapper {
+            position: relative;
             width: 100%;
-            display: block;
-        }
-        h1 {
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
             margin-bottom: 20px;
-            font-size: 24px;
+            border: 1px solid var(--red);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.1);
+        }
+        
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .red-overlay { 
+            position: absolute; 
+            inset: 0; 
+            background: radial-gradient(circle, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%); 
+            z-index: -1; 
+        }
+
+        .scanlines { 
+            position: absolute; 
+            inset: 0; 
+            background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.2) 50%); 
+            background-size: 100% 4px; 
+            z-index: -1; 
+            pointer-events: none; 
+            opacity: 0.15;
+        }
+
+        #cursor-dot { width: 4px; height: 4px; background: #fff; position: fixed; z-index: 10000; pointer-events: none; border-radius: 50%; }
+        #cursor-ring { width: 30px; height: 30px; border: 1px solid var(--red); position: fixed; z-index: 9999; pointer-events: none; border-radius: 50%; transition: 0.1s ease-out; box-shadow: 0 0 10px var(--red); }
+
+        #intro { height: 100vh; display: flex; justify-content: center; align-items: center; z-index: 10; position: relative; padding: 20px; }
+        .intro-box { text-align: center; background: var(--glass); padding: 50px; border: 1px solid var(--red); box-shadow: 0 0 30px rgba(255, 0, 0, 0.2); backdrop-filter: blur(10px); width: 100%; max-width: 500px; }
+        .glitch { font-family: 'Syncopate'; font-size: 2.2rem; letter-spacing: 5px; color: #fff; text-shadow: 3px 3px var(--red); margin-bottom: 10px; }
+        .sys-msg { color: var(--red); font-size: 0.8rem; letter-spacing: 4px; margin-bottom: 30px; opacity: 0.8; }
+        #enter-btn { background: transparent; border: 1px solid var(--red); color: #fff; padding: 15px 40px; font-family: 'Syncopate'; font-size: 0.7rem; transition: 0.4s; width: 100%; max-width: 250px; }
+        #enter-btn:hover { background: var(--red); color: #000; box-shadow: 0 0 20px var(--red); }
+
+        .top-bar { height: 50px; background: rgba(0,0,0,0.9); border-bottom: 1px solid var(--red); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; font-size: 0.8rem; font-family: monospace; }
+        .red-txt { color: var(--red); text-shadow: 0 0 5px var(--red); }
+
+        .main-layout { display: flex; height: calc(100vh - 80px); }
+
+        .sidebar { width: 280px; background: rgba(10, 0, 0, 0.9); border-right: 1px solid rgba(255, 0, 0, 0.2); padding: 20px; display: flex; flex-direction: column; overflow-y: auto; }
+        .status-box { margin-top: auto; padding-top: 20px; font-family: monospace; font-size: 0.75rem;}
+
+        .nav-link { text-decoration: none; color: inherit; display: block; width: 100%; }
+        .nav-item { padding: 15px; margin-bottom: 10px; border: 1px solid transparent; transition: 0.3s; color: #888; font-size: 0.9rem; }
+        .nav-item i { margin-right: 10px; }
+        .nav-link:hover .nav-item, .nav-item.active { border-color: var(--red); color: #fff; background: rgba(255, 0, 0, 0.05); }
+
+        .content-area { flex: 1; padding: 30px; overflow-y: auto; }
+        .area-header { color: var(--red); margin-bottom: 20px; font-family: monospace; border-left: 3px solid var(--red); padding-left: 10px; }
+        .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+
+        .file-card { background: var(--glass); border: 1px solid rgba(255, 0, 0, 0.2); padding: 20px; display: flex; align-items: center; gap: 15px; position: relative; transition: 0.3s; flex-wrap: wrap; }
+        .file-card:hover { border-color: var(--red); box-shadow: 0 0 15px rgba(255, 0, 0, 0.1); transform: translateY(-3px); }
+        .file-card.playing { border-color: var(--red); background: rgba(255, 0, 0, 0.05); }
+        .file-icon { font-size: 2rem; color: var(--red); }
+        .file-details { flex: 1; min-width: 150px; }
+        .file-details .name { display: block; font-weight: bold; font-size: 0.9rem; margin-bottom: 4px; white-space: normal; word-break: break-word; overflow: visible; }
+        .file-details .size { font-size: 0.7rem; color: #666; }
+        .dl-btn { margin-left: auto; font-size: 0.65rem; color: var(--red); text-decoration: none; border: 1px solid var(--red); padding: 5px 10px; transition: 0.3s; flex-shrink: 0; }
+        .dl-btn:hover { background: var(--red); color: #000; }
+
+        .bottom-ticker { height: 30px; background: var(--red); color: #000; font-weight: bold; font-size: 0.7rem; display: flex; align-items: center; position: fixed; bottom: 0; width: 100%; z-index: 100; padding: 0 20px; overflow: hidden;}
+        .hidden { display: none !important; }
+
+        @media (max-width: 768px) {
+            #cursor-dot, #cursor-ring { display: none !important; }
+            * { cursor: default !important; }
+
+            .glitch { font-size: 1.8rem; letter-spacing: 3px; }
+            .intro-box { padding: 30px 20px; }
+
+            .main-layout { flex-direction: column; height: calc(100vh - 80px); overflow-y: auto; }
+
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(255, 0, 0, 0.2); padding: 10px; flex-direction: row; flex-wrap: wrap; gap: 5px; }
+            .nav-link { width: auto; flex: 1; min-width: 100px; }
+            .nav-item { margin-bottom: 0; padding: 10px; text-align: center; font-size: 0.8rem; }
+            .nav-item i { margin-right: 5px; display: block; margin-bottom: 4px; }
+            .status-box { display: none; }
+
+            .content-area { padding: 15px; overflow-y: visible; }
+            .file-grid { grid-template-columns: 1fr; gap: 12px; }
+            .file-card { padding: 15px; }
+            
+            .dl-btn { margin-left: initial; margin-top: 5px; width: 100%; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-    <h1>Video Play</h1>
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
 
-    <div class="video-container">
-        <video controls autoplay muted>
-            <source src="red_video.mp4" type="video/mp4">
-            المتصفح الخاص بك لا يدعم تشغيل هذا الفيديو.
-        </video>
+    <div id="intro">
+        <div class="red-overlay"></div>
+        <div class="scanlines"></div>
+        <div class="intro-box">
+            <h1 class="glitch">LOGIC VORTEX</h1>
+            <p class="sys-msg">INITIALIZING VIDEO MATRIX SYSTEM...</p>
+            <button id="enter-btn">ENTER SYSTEM</button>
+        </div>
     </div>
 
+    <div id="system-interface" class="hidden">
+        <div class="top-bar">
+            <div>SYSTEM: <span class="red-txt">LOGIC VORTEX // TERMINAL_ACTIVE</span></div>
+            <div id="clock">00:00:00</div>
+        </div>
+
+        <div class="main-layout">
+            <div class="sidebar">
+                <div class="nav-link">
+                    <div class="nav-item active">
+                        <i class="fa-solid fa-terminal"></i> CORE_FEED
+                    </div>
+                </div>
+                
+                <div class="status-box">
+                    <p class="red-txt">// NET_STATUS</p>
+                    <p style="color: #666; font-size: 0.7rem; margin-top: 5px;">STREAM: ONLINE<br>BUFFER: OPTIMAL</p>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <h2 class="area-header" id="playing-title">NOW PLAYING: INITIALIZING...</h2>
+                
+                <div class="video-wrapper">
+                    <div id="player"></div>
+                </div>
+
+                <h3 class="area-header">// AVAILABLE_DATA_MODULES (QUEUE)</h3>
+                <div class="file-grid" id="playlist-grid">
+                    </div>
+            </div>
+        </div>
+
+        <div class="bottom-ticker">
+            <marquee scrollamount="5">LOGIC VORTEX TERMINAL // RECOGNIZED SEQUENCE DETECTED // AUDIO-VISUAL SYSTEM ONLINE // DEPLOYING PIPELINE // </marquee>
+        </div>
+    </div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        // Custom Grid Configuration Dataset
+        const videoDataset = [
+            { id: "zKXrPzCm-ZY", title: "Logic Vortex Sequence 01", size: "42.1 MB", track: "INDEX_01" },
+            { id: "dQw4w9WgXcQ", title: "Logic Vortex Sequence 02", size: "38.5 MB", track: "INDEX_02" },
+            { id: "3jx9rKqT_as", title: "Logic Vortex Sequence 03", size: "51.2 MB", track: "INDEX_03" }
+        ];
+
+        let player;
+        let currentTrackIndex = 0;
+
+        // Custom Cursor Movement Tracking Logic
+        const dot = document.getElementById('cursor-dot');
+        const ring = document.getElementById('cursor-ring');
+        
+        document.addEventListener('mousemove', (e) => {
+            dot.style.left = e.clientX + 'px';
+            dot.style.top = e.clientY + 'px';
+            
+            setTimeout(() => {
+                ring.style.left = (e.clientX - 13) + 'px';
+                ring.style.top = (e.clientY - 13) + 'px';
+            }, 30);
+        });
+
+        // Entrance Transition Controller Trigger
+        document.getElementById('enter-btn').addEventListener('click', () => {
+            document.getElementById('intro').classList.add('hidden');
+            document.getElementById('system-interface').classList.remove('hidden');
+            if(player && player.playVideo) {
+                player.playVideo();
+            }
+        });
+
+        // Initialize Embedded Iframe Player Engine
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '100%',
+                width: '100%',
+                videoId: videoDataset[currentTrackIndex].id,
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 1,
+                    'rel': 0,
+                    'modestbranding': 1
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            updateUIStructure();
+        }
+
+        // Sequential Progression Track Controller Logic
+        function onPlayerStateChange(event) {
+            // YT.PlayerState.ENDED = 0
+            if (event.data === 0) {
+                currentTrackIndex++;
+                if (currentTrackIndex < videoDataset.length) {
+                    loadTrack(currentTrackIndex);
+                } else {
+                    currentTrackIndex = 0; // Loop playlist structure
+                    loadTrack(currentTrackIndex);
+                }
+            }
+        }
+
+        function loadTrack(index) {
+            currentTrackIndex = index;
+            player.loadVideoById(videoDataset[index].id);
+            updateUIStructure();
+        }
+
+        // Inject Playlist Cards Grid Structure
+        function updateUIStructure() {
+            document.getElementById('playing-title').innerText = `NOW PLAYING: ${videoDataset[currentTrackIndex].title.toUpperCase()}`;
+            
+            const grid = document.getElementById('playlist-grid');
+            grid.innerHTML = '';
+
+            videoDataset.forEach((video, index) => {
+                const card = document.createElement('div');
+                card.className = `file-card ${index === currentTrackIndex ? 'playing' : ''}`;
+                card.innerHTML = `
+                    <div class="file-icon"><i class="fa-solid fa-file-video"></i></div>
+                    <div class="file-details">
+                        <span class="name">${video.title}</span>
+                        <span class="size">${video.track} // ${video.size}</span>
+                    </div>
+                    <a href="https://youtu.be/${video.id}" target="_blank" class="dl-btn" title="Share via YouTube Interface"><i class="fa-solid fa-share-nodes"></i> SHARE</a>
+                `;
+                
+                // Track Switch Click Override Event
+                card.addEventListener('click', (e) => {
+                    if(!e.target.classList.contains('dl-btn') && !e.target.closest('.dl-btn')) {
+                        loadTrack(index);
+                    }
+                });
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Active Clock Loop Runtime Engine
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toTimeString().split(' ')[0];
+        }, 1000);
+    </script>
 </body>
 </html>
